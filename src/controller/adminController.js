@@ -53,7 +53,7 @@ const signUpAdmin = async (req, res, next) => {
 			next(error);
 		} else {
 			const admin = await models.Admin.create({
-				admin_username: req.body.username,
+				admin_username: username,
 				admin_password: hashPassword,
 			});
 
