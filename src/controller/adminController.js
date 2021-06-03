@@ -38,8 +38,8 @@ const signInAdmin = async (req, res, next) => {
 
 const signUpAdmin = async (req, res, next) => {
 	try {
-		const password = "admin",
-		const username = "admin",
+		const password = "admin";
+		const username = "admin";
 		const salt = await bcrypt.genSalt(10);
 		const hashPassword = await bcrypt.hash(password, salt);
 
