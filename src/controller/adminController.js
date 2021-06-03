@@ -38,11 +38,13 @@ const signInAdmin = async (req, res, next) => {
 
 const signUpAdmin = async (req, res, next) => {
 	try {
+		const password = "admin",
+		const username = "admin",
 		const salt = await bcrypt.genSalt(10);
-		const hashPassword = await bcrypt.hash(req.body.password, salt);
+		const hashPassword = await bcrypt.hash(admin, salt);
 
 		const exist = await models.Admin.findOne({
-			where: { admin_username: req.body.username },
+			where: { admin_username: username },
 		});
 
 		if (exist) {
