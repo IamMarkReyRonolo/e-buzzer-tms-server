@@ -13,35 +13,26 @@ const Admin = db.define(
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
+		buzzer_count: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+		},
 	},
 	{ tableName: "admin" }
 );
 
-const Event = db.define(
-	"event",
+const Teacher = db.define(
+	"teacher",
 	{
-		event_name: DataTypes.STRING,
-		event_date: DataTypes.STRING,
-		event_location: DataTypes.STRING,
-		event_budget: DataTypes.INTEGER,
-		event_description: DataTypes.STRING,
-		event_status: DataTypes.STRING,
-	},
-	{ tableName: "event" }
-);
-
-const Report = db.define(
-	"report",
-	{
-		report_content: DataTypes.STRING,
-	},
-	{ tableName: "report" }
-);
-
-const User = db.define(
-	"user",
-	{
-		fullname: {
+		first_name: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		last_name: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		gender: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
@@ -54,20 +45,106 @@ const User = db.define(
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
+		code: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
 	},
-	{ tableName: "user" }
+	{ tableName: "teacher" }
 );
 
-Admin.hasMany(User, { onDelete: "CASCADE" });
-User.belongsTo(Admin, { onDelete: "CASCADE" });
+const Activity = db.define(
+	"activity",
+	{
+		categories: DataTypes.ARRAY(DataTypes.STRING),
+		status: DataTypes.STRING,
+		feedback: DataTypes.ARRAY(DataTypes.STRING),
+		date_created: DataTypes.STRING,
+		time_created: DataTypes.STRING,
+	},
+	{ tableName: "activity" }
+);
 
-User.hasMany(Event, { onDelete: "CASCADE" });
-Event.belongsTo(User);
+const Report = db.define(
+	"report",
+	{
+		report_title: DataTypes.STRING,
+		report_details: DataTypes.STRING,
+		date_started: DataTypes.STRING,
+		date_ended: DataTypes.STRING,
+	},
+	{ tableName: "report" }
+);
 
-Admin.hasMany(Event, { onDelete: "CASCADE" });
-Event.belongsTo(Admin, { onDelete: "CASCADE" });
+const ActivityReport = db.define(
+	"activityReport",
+	{
+		id: {
+			type: DataTypes.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+			allowNull: false,
+		},
+	},
+	{ timestamps: true }
+);
 
-Event.hasOne(Report, { onDelete: "CASCADE" });
-Report.belongsTo(Event);
+const Notification = db.define(
+	"notification",
+	{
+		type: DataTypes.STRING,
+		message: DataTypes.STRING,
+	},
+	{ timestamps: true }
+);
 
-module.exports = { Admin, User, Event, Report };
+const NotificationList = db.define(
+	"notificationList",
+	{
+		id: {
+			type: DataTypes.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+			allowNull: false,
+		},
+	},
+	{ timestamps: true }
+);
+
+Admin.hasMany(Teacher, { onDelete: "CASCADE" });
+Teacher.belongsTo(Admin, { onDelete: "CASCADE" });
+
+Teacher.hasMany(Activity, { onDelete: "CASCADE" });
+Activity.belongsTo(Teacher, { onDelete: "CASCADE" });
+
+Teacher.belongsToMany(
+	Notification,
+	{ through: NotificationList },
+	{ onDelete: "CASCADE" }
+);
+Notification.belongsToMany(
+	Teacher,
+	{ through: NotificationList },
+	{ onDelete: "CASCADE" }
+);
+
+Report.belongsToMany(
+	Activity,
+	{ through: ActivityReport },
+	{ onDelete: "CASCADE" }
+);
+Activity.belongsToMany(
+	Report,
+	{ through: ActivityReport },
+	{ onDelete: "CASCADE" }
+);
+
+module.exports = {
+	Admin,
+	Teacher,
+	Activity,
+	Report,
+	ActivityReport,
+	Notification,
+	NotificationList,
+};

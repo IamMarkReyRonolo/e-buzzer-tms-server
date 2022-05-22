@@ -27,7 +27,7 @@ db.authenticate()
 // API ROUTES
 const adminAPI = require("./api/adminAPI");
 const userAPI = require("./api/userAPI");
-const eventAPI = require("./api/eventAPI");
+const activityAPI = require("./api/activityAPI");
 const reportAPI = require("./api/reportAPI");
 
 app.get("/", (req, res) => {
@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/admin", adminAPI);
 app.use("/api/user", userAPI);
-app.use("/api/event", eventAPI);
+app.use("/api/activity", activityAPI);
 app.use("/api/report", reportAPI);
 
 // ERROR HANDLING

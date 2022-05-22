@@ -18,6 +18,7 @@ const authenticate = (req, res, next) => {
 				next(error);
 			} else {
 				req.user = verified;
+				console.log(req.user);
 				next();
 			}
 		} catch (error) {

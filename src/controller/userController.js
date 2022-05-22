@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 
 const getUser = async (req, res, next) => {
 	try {
-		const user = await models.User.findByPk(req.user, {
-			attributes: ["fullname"],
+		const user = await models.Teacher.findByPk(req.user, {
+			include: models.Activity,
 		});
 		if (!user) {
 			const error = new Error("Not Found");
@@ -20,7 +20,7 @@ const getUser = async (req, res, next) => {
 
 const signInUser = async (req, res, next) => {
 	try {
-		const exist = await models.User.findOne({
+		const exist = await models.Teacher.findOne({
 			where: { username: req.body.username },
 		});
 
@@ -62,7 +62,7 @@ const signUpUser = async (req, res, next) => {
 			next(error);
 		}
 
-		const exist = await models.User.findOne({
+		const exist = await models.Teacher.findOne({
 			where: { username: req.body.username },
 		});
 
@@ -71,10 +71,13 @@ const signUpUser = async (req, res, next) => {
 			error.status = 401;
 			next(error);
 		} else {
-			const user = await models.User.create({
-				fullname: req.body.fullname,
+			const user = await models.Teacher.create({
+				first_name: req.body.first_name,
+				last_name: req.body.last_name,
+				gender: req.body.gender,
 				username: req.body.username,
 				password: req.body.password,
+				code: req.body.code,
 				adminId: req.user,
 			});
 
@@ -90,7 +93,10 @@ const signUpUser = async (req, res, next) => {
 
 const getAllUsers = async (req, res, next) => {
 	try {
-		const users = await models.User.findAll({ where: { adminId: req.user } });
+		const users = await models.Teacher.findAll({
+			where: { adminId: req.user },
+			include: [models.Activity],
+		});
 		res.status(200).json(users);
 	} catch (error) {
 		next(error);
@@ -100,19 +106,23 @@ const getAllUsers = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
 	try {
 		const data = {
-			fullname: req.body.fullname,
+			first_name: req.body.first_name,
+			last_name: req.body.last_name,
+			gender: req.body.gender,
 			username: req.body.username,
 			password: req.body.password,
+			code: req.body.code,
 		};
 
-		const update = await models.User.update(data, {
+		const update = await models.Teacher.update(data, {
 			where: {
 				id: req.params.userId,
-				adminId: req.user,
 			},
 		});
 
-		if (!update) {
+		console.log(update);
+
+		if (update[0] == 0) {
 			const error = new Error("Not found");
 			error.status = 404;
 			next(error);
@@ -126,15 +136,9 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
 	try {
-		const data = {
-			fullname: req.body.fullname,
-			username: req.body.username,
-			password: req.body.password,
-		};
-		const deleted = await models.User.destroy({
+		const deleted = await models.Teacher.destroy({
 			where: {
 				id: req.params.userId,
-				adminId: req.user,
 			},
 		});
 

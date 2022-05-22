@@ -1,19 +1,33 @@
 const models = require("../models");
 const { Op } = require("sequelize");
 
-const getAllReports = async (req, res, next) => {
+const getUserNotification = async (req, res, next) => {
 	try {
-		const reports = await models.Report.findAll();
+		const notifications = await models.Notification.findAll({
+			teacherId: req.user,
+		});
 
-		res.status(200).json(reports);
+		res.status(200).json(notifications);
 	} catch (error) {
 		next(error);
 	}
 };
 
-const addReport = async (req, res, next) => {
+const getBuzzerNotification = async (req, res, next) => {
 	try {
-		const activities = await models.Activity.findAll({
+		const notifications = await models.Notification.findAll({
+			teacherId: req.user,
+		});
+
+		res.status(200).json(notifications);
+	} catch (error) {
+		next(error);
+	}
+};
+
+const notifyTeachers = async (req, res, next) => {
+	try {
+		const activities = await models.Notification.finpodAll({
 			where: {
 				date_created: {
 					[Op.and]: {
@@ -97,7 +111,7 @@ const deleteSpecificReport = async (req, res, next) => {
 };
 
 module.exports = {
-	getAllReports,
+	getUserNotification,
 	addReport,
 	getSpecificReport,
 	deleteSpecificReport,

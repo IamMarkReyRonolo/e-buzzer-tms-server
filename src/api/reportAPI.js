@@ -5,6 +5,18 @@ const router = express.Router();
 
 router.get("/all", auth.authenticate, reportController.getAllReports);
 
-router.post("/:eventId", reportController.addReport);
+router.get(
+	"/:report_id",
+	auth.authenticate,
+	reportController.getSpecificReport
+);
+
+router.post("/create", auth.authenticate, reportController.addReport);
+
+router.delete(
+	"/delete/:report_id",
+	auth.authenticate,
+	reportController.deleteSpecificReport
+);
 
 module.exports = router;

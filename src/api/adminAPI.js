@@ -9,4 +9,8 @@ router.post("/signIn", adminController.signInAdmin);
 
 router.post("/signUp", adminController.signUpAdmin);
 
+router.patch("/update", auth.authenticate, adminController.updateAdminPassword);
+
+router.patch("/buzzer/", auth.authenticate, adminController.clickBuzzer);
+
 module.exports = router;
