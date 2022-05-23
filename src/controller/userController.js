@@ -1,6 +1,7 @@
 const models = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { Op } = require("sequelize");
 
 const getUser = async (req, res, next) => {
 	try {
@@ -103,6 +104,34 @@ const getAllUsers = async (req, res, next) => {
 	}
 };
 
+const getUsersWithinRange = async (req, res, next) => {
+	try {
+		console.log(req.body.date_started);
+		console.log(req.body.date_ended);
+		const users = await models.Teacher.findAll({
+			where: { adminId: req.user },
+			include: [
+				{
+					model: models.Activity,
+					required: true,
+					as: "activities",
+					where: {
+						date_created: {
+							[Op.and]: {
+								[Op.lte]: req.body.date_ended,
+								[Op.gte]: req.body.date_started,
+							},
+						},
+					},
+				},
+			],
+		});
+		res.status(200).json(users);
+	} catch (error) {
+		next(error);
+	}
+};
+
 const updateUser = async (req, res, next) => {
 	try {
 		const data = {
@@ -161,4 +190,5 @@ module.exports = {
 	deleteUser,
 	signInUser,
 	signUpUser,
+	getUsersWithinRange,
 };

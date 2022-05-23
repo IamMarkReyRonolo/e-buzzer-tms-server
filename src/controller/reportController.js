@@ -61,6 +61,10 @@ const getSpecificReport = async (req, res, next) => {
 			include: {
 				model: models.Activity,
 				attributes: { exclude: ["feedback", "activityReport"] },
+				include: {
+					model: models.Teacher,
+					attributes: ["first_name", "last_name"],
+				},
 			},
 		});
 
