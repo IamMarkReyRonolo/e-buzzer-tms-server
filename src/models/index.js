@@ -36,6 +36,14 @@ const Teacher = db.define(
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
+		grade_level: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		section: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
 		username: {
 			type: DataTypes.STRING,
 			unique: true,
