@@ -85,37 +85,37 @@ const updateAdminPassword = async (req, res, next) => {
 			const error = new Error("Admin does not exist");
 			error.status = 400;
 			next(error);
-		}
-
-		const pass = await bcrypt.compare(
-			req.body.current_password,
-			admin.admin_password
-		);
-		if (!pass) {
-			const error = new Error("Current password is wrong");
-			error.status = 400;
-			next(error);
-		}
-
-		const password = req.body.new_password;
-		const salt = await bcrypt.genSalt(10);
-		const hashPassword = await bcrypt.hash(password, salt);
-
-		const update = await models.Admin.update(
-			{ admin_password: hashPassword },
-			{
-				where: {
-					id: req.user,
-				},
-			}
-		);
-
-		if (!update) {
-			const error = new Error("Not found");
-			error.status = 404;
-			next(error);
 		} else {
-			res.status(200).json({ message: "Successfully updated password." });
+			const pass = await bcrypt.compare(
+				req.body.current_password,
+				admin.admin_password
+			);
+			if (!pass) {
+				const error = new Error("Current password is wrong");
+				error.status = 400;
+				next(error);
+			} else {
+				const password = req.body.new_password;
+				const salt = await bcrypt.genSalt(10);
+				const hashPassword = await bcrypt.hash(password, salt);
+
+				const update = await models.Admin.update(
+					{ admin_password: hashPassword },
+					{
+						where: {
+							id: req.user,
+						},
+					}
+				);
+
+				if (update[0] == 0) {
+					const error = new Error("Not found");
+					error.status = 404;
+					next(error);
+				} else {
+					res.status(200).json({ message: "Successfully updated password." });
+				}
+			}
 		}
 	} catch (error) {
 		next(error);
