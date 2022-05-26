@@ -185,8 +185,11 @@ const deleteUser = async (req, res, next) => {
 
 const updateUserPasword = async (req, res, next) => {
 	try {
+		console.log(req.body.current_password);
+		console.log(req.body.new_password);
+		console.log(req.user);
 		const admin = await models.Teacher.findByPk(req.user);
-
+		console.log(admin);
 		if (!admin) {
 			const error = new Error("User does not exist");
 			error.status = 400;
@@ -213,6 +216,8 @@ const updateUserPasword = async (req, res, next) => {
 						},
 					}
 				);
+
+				console.log(update);
 
 				if (update[0] == 0) {
 					const error = new Error("Not found");
