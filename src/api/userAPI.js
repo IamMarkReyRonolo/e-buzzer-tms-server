@@ -16,4 +16,10 @@ router.post("/signUp", auth.authenticate, userController.signUpUser);
 router.patch("/:userId", auth.authenticate, userController.updateUser);
 router.delete("/:userId", auth.authenticate, userController.deleteUser);
 
+router.patch(
+	"/update/password",
+	auth.authenticate,
+	userController.updateUserPasword
+);
+
 module.exports = router;
