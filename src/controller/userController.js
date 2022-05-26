@@ -195,21 +195,13 @@ const updateUserPasword = async (req, res, next) => {
 			error.status = 400;
 			next(error);
 		} else {
-			const pass = await bcrypt.compare(
-				req.body.current_password,
-				admin.password
-			);
-			if (!pass) {
+			if (admin.password != req.body.current_password) {
 				const error = new Error("Current password is wrong");
 				error.status = 400;
 				next(error);
 			} else {
-				const password = req.body.new_password;
-				const salt = await bcrypt.genSalt(10);
-				const hashPassword = await bcrypt.hash(password, salt);
-
 				const update = await models.Teacher.update(
-					{ password: hashPassword },
+					{ password: req.body.current_password },
 					{
 						where: {
 							id: req.user,
