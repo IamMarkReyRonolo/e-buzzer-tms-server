@@ -201,7 +201,7 @@ const updateUserPasword = async (req, res, next) => {
 				next(error);
 			} else {
 				const update = await models.Teacher.update(
-					{ password: req.body.current_password },
+					{ password: req.body.new_password },
 					{
 						where: {
 							id: req.user,
@@ -211,7 +211,7 @@ const updateUserPasword = async (req, res, next) => {
 
 				console.log(update);
 
-				if (update[0] == 0) {
+				if (!update) {
 					const error = new Error("Not found");
 					error.status = 404;
 					next(error);
