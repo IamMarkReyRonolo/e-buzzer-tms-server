@@ -100,20 +100,16 @@ const ActivityReport = db.define(
 const Notification = db.define(
 	"notification",
 	{
-		type: DataTypes.STRING,
+		notification_type: DataTypes.STRING,
 		message: DataTypes.STRING,
-	},
-	{ timestamps: true }
-);
-
-const NotificationList = db.define(
-	"notificationList",
-	{
-		id: {
-			type: DataTypes.INTEGER,
-			primaryKey: true,
-			autoIncrement: true,
-			allowNull: false,
+		date_created: DataTypes.STRING,
+		teacher_id: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		status: {
+			type: DataTypes.STRING,
+			allowNull: true,
 		},
 	},
 	{ timestamps: true }
@@ -124,17 +120,6 @@ Teacher.belongsTo(Admin, { onDelete: "CASCADE" });
 
 Teacher.hasMany(Activity, { onDelete: "CASCADE" });
 Activity.belongsTo(Teacher, { onDelete: "CASCADE" });
-
-Teacher.belongsToMany(
-	Notification,
-	{ through: NotificationList },
-	{ onDelete: "CASCADE" }
-);
-Notification.belongsToMany(
-	Teacher,
-	{ through: NotificationList },
-	{ onDelete: "CASCADE" }
-);
 
 Report.belongsToMany(
 	Activity,
@@ -154,5 +139,4 @@ module.exports = {
 	Report,
 	ActivityReport,
 	Notification,
-	NotificationList,
 };

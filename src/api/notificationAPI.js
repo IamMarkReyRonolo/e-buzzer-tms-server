@@ -1,16 +1,18 @@
-// const express = require("express");
-// const adminController = require("../controller/adminController");
-// const router = express.Router();
-// const auth = require("../controller/auth");
+const express = require("express");
+const notificationController = require("../controller/notificationController");
+const router = express.Router();
+const auth = require("../controller/auth");
 
-// router.post("/buzzer", auth.authenticate, adminController.getAdmin);
+router.get("/", auth.authenticate, notificationController.getUserNotification);
+router.post(
+	"/create",
+	auth.authenticate,
+	notificationController.createNotification
+);
 
-// router.post("/notifyTeachers", adminController.signInAdmin);
-
-// router.post("/signUp", adminController.signUpAdmin);
-
-// router.patch("/update", auth.authenticate, adminController.updateAdminPassword);
-
-// router.patch("/buzzer/", auth.authenticate, adminController.clickBuzzer);
-
-// module.exports = router;
+router.patch(
+	"/update/:notif_id",
+	auth.authenticate,
+	notificationController.updateNotification
+);
+module.exports = router;
