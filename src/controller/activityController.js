@@ -69,7 +69,7 @@ const createEvent = async (req, res, next) => {
 				body: { notif: notif },
 			});
 
-			const sub = await subscriptionController.getSpecific(req.user);
+			const sub = await subscriptionController.getSpecific(data.teacherId);
 			const subscription = {
 				endpoint: sub.endpoint,
 				expirationTime: null,
