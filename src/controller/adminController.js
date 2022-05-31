@@ -170,10 +170,34 @@ const clickBuzzer = async (req, res, next) => {
 	}
 };
 
+const reset = async (req, res, next) => {
+	try {
+		const update = await models.Admin.update(
+			{ buzzer_count: 0 },
+			{
+				where: {
+					id: req.user,
+				},
+			}
+		);
+
+		if (update[0] == 0) {
+			const error = new Error("Not found");
+			error.status = 404;
+			next(error);
+		} else {
+			res.status(200).json({ message: "Successfully reset." });
+		}
+	} catch (error) {
+		next(error);
+	}
+};
+
 module.exports = {
 	getAdmin,
 	signInAdmin,
 	signUpAdmin,
 	updateAdminPassword,
 	clickBuzzer,
+	reset,
 };
