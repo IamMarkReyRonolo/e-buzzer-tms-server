@@ -92,5 +92,6 @@ module.exports = {
 	getUserNotification,
 	addNotification,
 	createNotification,
+	updateNotification,
 	deleteNotification,
 };
