@@ -68,9 +68,29 @@ const updateNotification = async (req, res, next) => {
 	}
 };
 
+const deleteNotification = async (req, res, next) => {
+	try {
+		const deleted = await models.Notification.destroy({
+			where: {
+				id: req.params.notif_id,
+			},
+		});
+
+		if (!deleted) {
+			const error = new Error("Not found");
+			error.status = 404;
+			next(error);
+		} else {
+			res.status(200).json({ message: "Successfully deleted notification." });
+		}
+	} catch (error) {
+		next(error);
+	}
+};
+
 module.exports = {
 	getUserNotification,
 	addNotification,
 	createNotification,
-	updateNotification,
+	deleteNotification,
 };

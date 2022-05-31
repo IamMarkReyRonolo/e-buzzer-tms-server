@@ -15,4 +15,10 @@ router.patch(
 	auth.authenticate,
 	notificationController.updateNotification
 );
+
+router.delete(
+	"/delete/:notif_id",
+	auth.authenticate,
+	notificationController.deleteNotification
+);
 module.exports = router;
