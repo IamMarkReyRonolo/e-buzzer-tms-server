@@ -81,7 +81,9 @@ const createEvent = async (req, res, next) => {
 
 			webpush
 				.sendNotification(subscription, "feedback")
-				.then((data) => {})
+				.then((data) => {
+					console.log(data);
+				})
 				.catch((err) => console.error(err));
 
 			res.status(200).json(event);

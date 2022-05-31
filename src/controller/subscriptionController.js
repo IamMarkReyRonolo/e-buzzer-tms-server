@@ -7,6 +7,7 @@ const getAll = async () => {
 	console.log(subscriptions);
 };
 const getSpecific = async (teacher_id) => {
+	console.log("---------------------------------------------------");
 	console.log(teacher_id);
 	const subscription = await models.Subscription.findOne({
 		where: {
@@ -14,6 +15,7 @@ const getSpecific = async (teacher_id) => {
 		},
 	});
 	console.log(subscription);
+	console.log("---------------------------------------------------");
 
 	return subscription;
 };
