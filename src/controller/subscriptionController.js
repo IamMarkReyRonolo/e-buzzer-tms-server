@@ -4,13 +4,16 @@ const { Op } = require("sequelize");
 const getAll = async () => {
 	const subscriptions = await models.Subscription.findAll();
 	return subscriptions;
+	console.log(subscriptions);
 };
 const getSpecific = async (teacher_id) => {
+	console.log(teacher_id);
 	const subscription = await models.Subscription.findOne({
 		where: {
 			teacherId: teacher_id,
 		},
 	});
+	console.log(subscription);
 
 	return subscription;
 };
