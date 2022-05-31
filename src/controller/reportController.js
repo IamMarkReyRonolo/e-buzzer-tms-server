@@ -29,8 +29,6 @@ const addReport = async (req, res, next) => {
 			activities_array.push(activity.dataValues);
 		});
 
-		console.log(activities_array);
-
 		const createReport = await models.Report.create({
 			report_title: req.body.report_title,
 			report_details: req.body.report_details,

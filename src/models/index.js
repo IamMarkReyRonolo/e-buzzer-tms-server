@@ -115,6 +115,16 @@ const Notification = db.define(
 	{ timestamps: true }
 );
 
+const Subscription = db.define(
+	"subscription",
+	{
+		endpoint: DataTypes.STRING(1000),
+		hash: DataTypes.STRING(1000),
+		auth: DataTypes.STRING(1000),
+	},
+	{ tableName: "subscription", timestamps: false }
+);
+
 Admin.hasMany(Teacher, { onDelete: "CASCADE" });
 Teacher.belongsTo(Admin, { onDelete: "CASCADE" });
 
@@ -126,11 +136,15 @@ Report.belongsToMany(
 	{ through: ActivityReport },
 	{ onDelete: "CASCADE" }
 );
+
 Activity.belongsToMany(
 	Report,
 	{ through: ActivityReport },
 	{ onDelete: "CASCADE" }
 );
+
+Teacher.hasMany(Subscription, { onDelete: "CASCADE" });
+Subscription.belongsTo(Teacher, { onDelete: "CASCADE" });
 
 module.exports = {
 	Admin,
@@ -139,4 +153,5 @@ module.exports = {
 	Report,
 	ActivityReport,
 	Notification,
+	Subscription,
 };

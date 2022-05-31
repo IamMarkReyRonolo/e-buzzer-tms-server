@@ -15,21 +15,17 @@ const getUserNotification = async (req, res, next) => {
 	}
 };
 
-const addNotification = async (req, res, next) => {
-	try {
-		const notif = {
-			notification_type: req.body.notif.notification_type,
-			message: req.body.notif.message,
-			date_created: req.body.notif.date_created,
-			teacher_id: req.body.notif.teacher_id,
-			status: "new",
-		};
+const addNotification = async (req) => {
+	const notif = {
+		notification_type: req.body.notif.notification_type,
+		message: req.body.notif.message,
+		date_created: req.body.notif.date_created,
+		teacher_id: req.body.notif.teacher_id,
+		status: "new",
+	};
 
-		const notifications = await models.Notification.create(notif);
-		return notifications;
-	} catch (error) {
-		next(error);
-	}
+	const notifications = await models.Notification.create(notif);
+	return notifications;
 };
 
 const createNotification = async (req, res, next) => {

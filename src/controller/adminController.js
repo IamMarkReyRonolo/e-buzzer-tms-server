@@ -1,10 +1,12 @@
 const models = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const notificationController = require("./notificationController");
+const subscriptionController = require("./subscriptionController");
+const webpush = require("web-push");
 
 const signInAdmin = async (req, res, next) => {
 	try {
-		console.log(req.body);
 		const exist = await models.Admin.findOne({
 			where: { admin_username: req.body.username },
 		});
@@ -138,6 +140,29 @@ const clickBuzzer = async (req, res, next) => {
 			error.status = 404;
 			next(error);
 		} else {
+			const result = await notificationController.addNotification(req);
+
+			// Create payload
+			const payload = "Buzzer";
+
+			const subs = await subscriptionController.getAll();
+
+			subs.forEach((sub) => {
+				const subscription = {
+					endpoint: sub.endpoint,
+					expirationTime: null,
+					keys: {
+						p256dh: sub.hash,
+						auth: sub.auth,
+					},
+				};
+
+				webpush
+					.sendNotification(subscription, payload)
+					.then((data) => {})
+					.catch((err) => console.error(err));
+			});
+
 			res.status(200).json({ message: "Successfully clicked the buzzer." });
 		}
 	} catch (error) {

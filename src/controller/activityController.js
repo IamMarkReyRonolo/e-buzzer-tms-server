@@ -1,4 +1,8 @@
 const models = require("../models");
+const jwt = require("jsonwebtoken");
+const notificationController = require("./notificationController");
+const subscriptionController = require("./subscriptionController");
+const webpush = require("web-push");
 
 const getAllEventsAdmin = async (req, res, next) => {
 	try {
@@ -48,9 +52,38 @@ const createEvent = async (req, res, next) => {
 			error.status = 404;
 			next(error);
 		} else {
-			console.log(data);
-
 			const event = await models.Activity.create(data);
+			let messages = "";
+
+			data.feedback.forEach((f) => {
+				messages += f + " ";
+			});
+			const notif = {
+				notification_type: "feedback",
+				message: messages,
+				date_created: data.date_created,
+				teacher_id: data.teacherId,
+				status: "new",
+			};
+			const result = await notificationController.addNotification({
+				body: { notif: notif },
+			});
+
+			const sub = await subscriptionController.getSpecific(req.user);
+			const subscription = {
+				endpoint: sub.endpoint,
+				expirationTime: null,
+				keys: {
+					p256dh: sub.hash,
+					auth: sub.auth,
+				},
+			};
+
+			webpush
+				.sendNotification(subscription, "feedback")
+				.then((data) => {})
+				.catch((err) => console.error(err));
+
 			res.status(200).json(event);
 		}
 	} catch (error) {
